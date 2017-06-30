@@ -56,44 +56,25 @@ class Goods extends Swoole\Controller
     	// 先验证数据
         $data = $this->request->get;
         $this->log->put( json_encode(['get'=>$data]) );
-        $this->log->flush();
+        // $this->log->flush();
         if ( !isset($data['id']) || !isset($data['good_num']) ) 
         {
         	return $this->message("10", '数据非法');
         }
         $goods_model = Model('Goods');
-        $good = $goods_model->get($data['id']);
-        if ( $data['good_num'] > $good['allow_num'] ) 
+
+        $res = $goods_model->buy($data['id'], $data['good_num']);
+
+        $this->log->put( json_encode(['res'=>$res]) );
+        $this->log->flush();
+
+        if ($res['code'] == '00')
         {
-        	return $this->message("11", '超过购买限制');
-        }
-        if ( $data['good_num'] > $good['number'] ) 
-        {
-        	return $this->message("12", '商品余额不足');
+        	return $this->json(array('pay_url'=>"/pay/index"), $res['code'], $res['message']);
         }
 
-		$goods_model->db->start();
-		$update = array(
-				'number'	=>	$good['number'] - $data['good_num'],
-			);
-		$update_res = $goods_model->set($good['id'], $update);
+		return $this->message($res['code'], $res['message']);
 
-		$goods_log_model = Model('GoodsLog');
-		$log_data = array(
-				'good_id'	=>	$good['id'],
-				'good_num'	=>	$data['good_num'],
-				'create_time'	=>	date("Y-m-d H:i:m"),
-			);
-		$log_res = $goods_log_model->put($log_data);
-
-		if ($update_res && $log_res) 
-		{
-			$goods_model->db->commit();
-			return $this->json(array('pay_url'=>"/pay/index"), "00", "成功");
-		}
-
-		$goods_model->db->rollback();
-		return $this->message("13", "失败");
     }
 
 
