@@ -2,7 +2,7 @@
 define('DEBUG', 'on');
 //必须设置此目录,PHP程序的根目录
 define('WEBPATH', __DIR__);
-define('WEBROOT', 'http://local.framework.com');
+define('WEBROOT', 'http://localhost:8891');
 
 require __DIR__.'/vendor/autoload.php';
 //包含框架入口文件
