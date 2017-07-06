@@ -1,5 +1,5 @@
 <?php
-error_reporting('0');
+error_reporting('1');
 define('DEBUG', 'on');
 define("WEBPATH", realpath(__DIR__));
 date_default_timezone_set('PRC');
@@ -20,4 +20,5 @@ $server = new \Swoole\Network\Server('127.0.0.1', 8891);
 $server->setProtocol($AppSvr);
 // $server->daemonize(); //作为守护进程
 // $server->run(array('worker_num' => 24,'reactor_num' => 8,'max_request' => 3000,'task_worker_num'=>4));
-$server->run(array('worker_num' => 1, 'max_request' => 300));
+$server->run(array('worker_num' => 10, 'max_request' => 10000, 'task_worker_num'=>2));
+// $server->run(array('worker_num' => 1, 'max_request' => 100));

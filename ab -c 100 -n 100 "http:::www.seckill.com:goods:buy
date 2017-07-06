@@ -1,0 +1,401 @@
+ab -c 100 -n 100 "http://www.seckill.com/goods/buy?id=4&good_num=2"
+
+--------- redis ------------
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=4&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.228 seconds
+Complete requests:      100
+Failed requests:        90
+   (Connect: 0, Receive: 0, Length: 90, Exceptions: 0)
+Total transferred:      23600 bytes
+HTML transferred:       6300 bytes
+Requests per second:    437.89 [#/sec] (mean)
+Time per request:       228.367 [ms] (mean)
+Time per request:       2.284 [ms] (mean, across all concurrent requests)
+Transfer rate:          100.92 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        2    3   1.0      3       5
+Processing:    39  145  41.5    145     222
+Waiting:       39  145  41.5    145     222
+Total:         44  148  40.5    148     223
+
+Percentage of the requests served within a certain time (ms)
+  50%    148
+  66%    163
+  75%    173
+  80%    178
+  90%    210
+  95%    217
+  98%    222
+  99%    223
+ 100%    223 (longest request)
+
+
+
+ -------------- task -----------
+ --------- 1 ------------
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=4&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.242 seconds
+Complete requests:      100
+Failed requests:        0
+Total transferred:      24500 bytes
+HTML transferred:       7200 bytes
+Requests per second:    412.87 [#/sec] (mean)
+Time per request:       242.206 [ms] (mean)
+Time per request:       2.422 [ms] (mean, across all concurrent requests)
+Transfer rate:          98.78 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        2    3   0.9      3       5
+Processing:    24  150  54.8    156     236
+Waiting:       23  150  54.8    156     236
+Total:         28  154  54.0    159     238
+
+Percentage of the requests served within a certain time (ms)
+  50%    159
+  66%    185
+  75%    199
+  80%    207
+  90%    224
+  95%    232
+  98%    236
+  99%    238
+ 100%    238 (longest request)
+
+
+--------- 2 -------------
+
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.821 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    121.88 [#/sec] (mean)
+Time per request:       820.507 [ms] (mean)
+Time per request:       8.205 [ms] (mean, across all concurrent requests)
+Transfer rate:          28.56 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        2    3   0.9      3       5
+Processing:    26  446 224.3    462     814
+Waiting:       26  446 224.3    462     814
+Total:         31  449 223.3    466     815
+
+Percentage of the requests served within a certain time (ms)
+  50%    466
+  66%    580
+  75%    645
+  80%    681
+  90%    752
+  95%    786
+  98%    808
+  99%    815
+ 100%    815 (longest request)
+
+
+--------- 3 -----------
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.825 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    121.24 [#/sec] (mean)
+Time per request:       824.806 [ms] (mean)
+Time per request:       8.248 [ms] (mean, across all concurrent requests)
+Transfer rate:          28.42 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    3   1.0      2       5
+Processing:    24  453 227.2    474     819
+Waiting:       24  453 227.2    474     819
+Total:         29  456 226.3    477     820
+WARNING: The median and mean for the initial connection time are not within a normal deviation
+        These results are probably not that reliable.
+
+Percentage of the requests served within a certain time (ms)
+  50%    477
+  66%    592
+  75%    653
+  80%    689
+  90%    757
+  95%    790
+  98%    814
+  99%    820
+ 100%    820 (longest request)
+
+
+-------- 4 ------------
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.872 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    114.72 [#/sec] (mean)
+Time per request:       871.673 [ms] (mean)
+Time per request:       8.717 [ms] (mean, across all concurrent requests)
+Transfer rate:          26.89 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        2    3   0.9      4       5
+Processing:    18  460 240.2    479     865
+Waiting:       18  460 240.2    479     865
+Total:         22  463 239.3    482     867
+WARNING: The median and mean for the initial connection time are not within a normal deviation
+        These results are probably not that reliable.
+
+Percentage of the requests served within a certain time (ms)
+  50%    482
+  66%    602
+  75%    666
+  80%    702
+  90%    775
+  95%    839
+  98%    860
+  99%    867
+ 100%    867 (longest request)
+
+ --------- 5 no log --------------
+
+ Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.807 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    123.87 [#/sec] (mean)
+Time per request:       807.293 [ms] (mean)
+Time per request:       8.073 [ms] (mean, across all concurrent requests)
+Transfer rate:          29.03 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    2   0.7      2       4
+Processing:    26  448 221.7    472     802
+Waiting:       26  447 221.7    472     802
+Total:         30  450 220.9    474     803
+
+Percentage of the requests served within a certain time (ms)
+  50%    474
+  66%    582
+  75%    643
+  80%    677
+  90%    746
+  95%    777
+  98%    797
+  99%    803
+ 100%    803 (longest request)
+
+
+------- 5 no log ---------------
+
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.858 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    116.61 [#/sec] (mean)
+Time per request:       857.538 [ms] (mean)
+Time per request:       8.575 [ms] (mean, across all concurrent requests)
+Transfer rate:          27.33 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    2   0.7      2       4
+Processing:    31  478 232.5    504     853
+Waiting:       31  478 232.6    504     853
+Total:         35  481 231.8    506     854
+
+Percentage of the requests served within a certain time (ms)
+  50%    506
+  66%    618
+  75%    681
+  80%    721
+  90%    790
+  95%    826
+  98%    847
+  99%    854
+ 100%    854 (longest request)
+
+
+ ------ 6  no task ----------
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.719 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    139.04 [#/sec] (mean)
+Time per request:       719.200 [ms] (mean)
+Time per request:       7.192 [ms] (mean, across all concurrent requests)
+Transfer rate:          32.59 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    2   0.6      2       3
+Processing:    33  383 198.1    392     715
+Waiting:       30  383 198.3    392     715
+Total:         36  385 197.5    393     716
+
+Percentage of the requests served within a certain time (ms)
+  50%    393
+  66%    499
+  75%    560
+  80%    593
+  90%    657
+  95%    689
+  98%    709
+  99%    716
+ 100%    716 (longest request)
+
+
+
+
+-------- 6 no task -----------
+
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.764 seconds
+Complete requests:      100
+Failed requests:        50
+   (Connect: 0, Receive: 0, Length: 50, Exceptions: 0)
+Total transferred:      24000 bytes
+HTML transferred:       6700 bytes
+Requests per second:    130.92 [#/sec] (mean)
+Time per request:       763.803 [ms] (mean)
+Time per request:       7.638 [ms] (mean, across all concurrent requests)
+Transfer rate:          30.69 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    3   0.7      3       4
+Processing:     9  396 218.7    408     759
+Waiting:        9  396 218.8    408     759
+Total:         12  398 218.0    410     760
+
+Percentage of the requests served within a certain time (ms)
+  50%    410
+  66%    524
+  75%    589
+  80%    624
+  90%    697
+  95%    731
+  98%    753
+  99%    760
+ 100%    760 (longest request)
+
+------ 6 no task  num=20 --------
+
+Server Software:        nginx/1.10.1
+Server Hostname:        www.seckill.com
+Server Port:            80
+
+Document Path:          /goods/buy?id=7&good_num=2
+Document Length:        72 bytes
+
+Concurrency Level:      100
+Time taken for tests:   0.728 seconds
+Complete requests:      100
+Failed requests:        38
+   (Connect: 0, Receive: 0, Length: 38, Exceptions: 0)
+Total transferred:      24120 bytes
+HTML transferred:       6820 bytes
+Requests per second:    137.37 [#/sec] (mean)
+Time per request:       727.960 [ms] (mean)
+Time per request:       7.280 [ms] (mean, across all concurrent requests)
+Transfer rate:          32.36 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        1    2   0.7      2       4
+Processing:   168  439 167.1    446     723
+Waiting:      168  439 167.1    446     723
+Total:        171  441 166.5    448     724
+
+Percentage of the requests served within a certain time (ms)
+  50%    448
+  66%    526
+  75%    580
+  80%    629
+  90%    668
+  95%    713
+  98%    723
+  99%    724
+ 100%    724 (longest request)
+
+
+
+
+

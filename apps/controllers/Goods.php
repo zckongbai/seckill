@@ -44,7 +44,6 @@ class Goods extends Swoole\Controller
     function add()
     {
         $data = $this->request->post;
-
         if ($data) 
         {
             $model = Model("Goods");
@@ -55,7 +54,7 @@ class Goods extends Swoole\Controller
             {
             	// 入redis
             	$data['id'] = $res;
-            	$redis_res = $this->redis->hMset("goods_{$res}", $data);
+            	$redis_res = $this->redis->hMset("goods:{$res}", $data);
             	$this->log->put( json_encode(['redis_res'=>$redis_res]) );
                 $this->http->redirect('index');
             }
@@ -71,9 +70,9 @@ class Goods extends Swoole\Controller
     function buy()
     {
     	// 先验证数据
-        $data = $this->request->get;
-        $this->log->put( json_encode(['get'=>$data]) );
-        if ( !isset($data['id']) || !isset($data['good_num']) ) 
+        $get = $this->request->get;
+        $this->log->put( json_encode(['get'=>$get]) );
+        if ( !isset($get['id']) || !isset($get['good_num']) ) 
         {
         	$this->log->flush();
         	return $this->message("10", '数据非法');
@@ -85,18 +84,54 @@ class Goods extends Swoole\Controller
         	return $this->message("13", '商品数量不足');
     	}
 
-        $goods_model = Model('Goods');
+    	// 操作数据库改为异步
+        // 已经判断过数量了 ^
+        $good = $this->redis->hGetAll("goods:{$get['id']}");
 
-        $res = $goods_model->buy($data['id'], $data['good_num']);
+        // if ( !($good['allow_num'] >= $good['good_num']) && ($good['number'] > $good['sell_number']) && (($good['number'] - $good['sell_number']) >= $get['good_num']) )
+        // {
+        //     return $this->message("13", '商品数量不足');
+        // }
 
-        $this->log->put( json_encode(['res'=>$res]) );
-        $this->log->flush();
-
-        if ($res['code'] == '00')
+        if (  $good['allow_num'] < $good['good_num'] )
         {
-        	return $this->json(array('pay_url'=>"/pay/index"), $res['code'], $res['message']);
+            return $this->message("13", '商品数量不足');
         }
-		return $this->message($res['code'], $res['message']);
+
+        if (  $good['number'] <= $good['sell_number'] )
+        {
+            return $this->message("13", '商品数量不足');
+        }
+        
+        if (  $good['number'] - $good['sell_number'] < $get['good_num'] )
+        {
+            return $this->message("13", '商品数量不足');
+        }
+
+
+
+        $this->redis->watch("goods:{$get['id']}");
+        $this->redis->multi();
+        $this->redis->hIncrBy("goods:{$get['id']}", "sell_number", $get['good_num']);
+        $redis_res = $this->redis->exec();
+
+        $this->log->put( json_encode(['buy_good_res'=>$redis_res,'data'=>$get]) );
+
+        if (!$redis_res)
+        {
+            return $this->message("12", '失败');
+        }
+
+        $task_data = array(
+        		'type'	=>	'goods_buy',
+        		'id'	=>	$get['id'],
+        		'good_num'	=>	$get['good_num'],
+        		'time'	=>	time(),
+        	);
+        $res = $this->server->getSwooleServer()->task($task_data);
+        $this->log->put( json_encode(['task-res'=>$res]) );
+        $this->log->flush();
+    	return $this->json(array('pay_url'=>"/pay/index"), "00", "成功");
     }
 
     /**
@@ -107,10 +142,13 @@ class Goods extends Swoole\Controller
     {
     	$get = $this->request->get;
 		$good = $this->__get_goods_by_id($get['id']);
-		if (!$good || $good['number'] < $get['good_num']){
-			return false;
+        $this->log->put( json_encode(['__before_buy-good'=>$good]) );
+        $this->log->flush();
+		// if ( !$good || ($good['allow_num'] < $good['good_num']) || (($good['number'] - $good['sell_number']) < $get['good_num']) ){
+    if ( $good && ($good['allow_num'] >= $good['good_num']) && (($good['number'] - $good['sell_number']) >= $get['good_num']) ){
+            return true;
 		}
-		return true;
+		return false;
     }
 
     /**
@@ -118,16 +156,20 @@ class Goods extends Swoole\Controller
      */
     protected function __get_goods_by_id($id)
     {
-    	$data = $this->redis->hGet("goods_{$id}");
+    	$data = $this->redis->hGetAll("goods:{$id}");
+        $this->log->put( json_encode(['__get_goods_by_id-good'=>$data, 'id'=>"goods:{$id}"]) );
     	if (!$data)
     	{
     		$model = Model('Goods');
-    		$data = $model->get($id);
-    		if (!$data)
+    		$data = $model->get($id)->get();
+            $this->log->put( json_encode(['__get_goods_by_id-model-good'=>$data]) );
+    		if ($data)
     		{
-    			$this->redis->hSet("goods_{$id}", $data);
+    			$res = $this->redis->hMset("goods:{$id}", $data);
+                $this->log->put( json_encode(['__get_goods_by_id-redis-good'=>$res]) );
     		}
     	}
+        $this->log->flush();
     	return $data;
     }
 
