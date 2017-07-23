@@ -19,7 +19,6 @@ class Goods extends Swoole\Controller
 
     function index()
     {
-        // echo __METHOD__;
         $model = Model('Goods');
         $get =  $this->request->get;
         $arr = array(
@@ -37,6 +36,11 @@ class Goods extends Swoole\Controller
     	$model = Model('Goods');
     	$good = $model->get($id);
     	$this->assign('good', $good);
+        $this->display();
+    }
+
+    function sold_out()
+    {
         $this->display();
     }
 
@@ -83,7 +87,7 @@ class Goods extends Swoole\Controller
             // 入redis
             $redis_res1 = $this->redis->hMset("goods:{$data['id']}", $data);
             // 加入id hash
-            $redis_res2 = $this->redis->hSet('seckill_goods_id', $data['id'], $data['id']);
+            $redis_res2 = $this->redis->hSet('seckill_goods_id', $data['id'], "goods:{$data['id']}");
             $this->log->put( json_encode(['redis_res1:'.$time=>$redis_res1,'redis_res2:'.$time=>$redis_res2]) );
 
             if ($redis_res1 && $redis_res2)
@@ -92,20 +96,11 @@ class Goods extends Swoole\Controller
             }
             $time--;
         }
+        $this->log->flush();
         if ($redis_res1 && $redis_res2)
         {
-        //     // 发布消息 (http server出错,不用这种了)
-        //     // $publish_res = $this->redis->publish('add_seckill_goods', json_encode($data));
-        //     // $this->log->put( json_encode(['publish_res'=>$publish_res]) );
-
-        //     // 通知http服务器
-        //     $notice_res = $this->__add_to_swoole_table($data);
-
-        //     $this->log->put( json_encode(['notice_res'=>$notice_res]) );
-        //     $this->log->flush();
             return true;
         }
-        $this->log->flush();
         return false;
     }
 
@@ -167,25 +162,9 @@ class Goods extends Swoole\Controller
     	}
 
     	// 操作数据库改为异步
-        // 已经判断过数量了 ^
         $good = $this->redis->hGetAll("goods:{$get['id']}");
 
-        // if ( !($good['allow_num'] >= $good['good_num']) && ($good['number'] > $good['sell_number']) && (($good['number'] - $good['sell_number']) >= $get['good_num']) )
-        // {
-        //     return $this->message("13", '商品数量不足');
-        // }
-
-        if (  $good['allow_num'] < $get['good_num'] )
-        {
-            return $this->message("13", '商品数量不足');
-        }
-
-        if (  $good['number'] <= $good['sell_number'] )
-        {
-            return $this->message("13", '商品数量不足');
-        }
-        
-        if (  $good['number'] - $good['sell_number'] < $get['good_num'] )
+        if ( !($good['allow_num'] >= $good['good_num'] && $good['number'] > $good['sell_number'] && $good['number'] - $good['sell_number'] >= $get['good_num']) )
         {
             return $this->message("13", '商品数量不足');
         }
